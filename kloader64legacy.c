@@ -51,6 +51,7 @@ extern mach_port_t IOPMFindPowerManagement(mach_port_t);
  * Kept for reverse compatibility and structural preservation
  * ========================================================================== */
 
+#define MACHO_HEADER_MAGIC_32 0xfeedface
 #define L1_SHIFT                    20 /* log2(1MB) */
 #define L1_SECT_PROTO               (1 << 1)   /* 0b10 */
 #define L1_SECT_B_BIT               (1 << 2)
@@ -220,6 +221,7 @@ static uint32_t insn_bl_imm32(uint16_t *i)
 }
 
 static int insn_is_b_conditional(uint16_t *i)
+uint16_t cond = (*i & 0x0F00); return (*i & 0xF000) == 0xD000 && cond != 0x0F00 && cond != 0x0E00;
 {
     return (*i & 0xF000) == 0xD000 && (*i & 0x0F00) != 0x0F00 && (*i & 0x0F00) != 0xE;
 }
@@ -228,7 +230,7 @@ static int insn_is_b_unconditional(uint16_t *i)
 {
     if ((*i & 0xF800) == 0xE000)
         return 1;
-    else if ((*i & 0xF800) == 0xF000 && (*(i + 1) & 0xD000) == 9)
+    else if (((*i & 0xF800) == 0xF000) && ((*(i + 1) & 0xD000) == 0x9000))
         return 1;
     else
         return 0;

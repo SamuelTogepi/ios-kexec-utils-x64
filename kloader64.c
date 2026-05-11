@@ -252,8 +252,7 @@ void find_critical_offsets() {
     
     uint8_t* xref_search_start = g_state.kernel_dump;
     while(1) {
-        uint8_t* potential_adrp = (uint8_t*)safe_memmem(xref_search_start, KERNEL_DUMP_SIZE - (xref_search_start - g_state.kernel_dump), "\x00\x00\x00\x90", "xxx\xfc");
-        if(!potential_adrp) break;
+        uint8_t* potential_adrp = (uint8_t*)safe_memmem(xref_search_start, KERNEL_DUMP_SIZE - (xref_search_start - g_state.kernel_dump), "\x00\x00\x00\x90", strlen("xxx\xfc"));        if(!potential_adrp) break;
 
         uint64_t adrp_va = g_state.kernel_base + (potential_adrp - g_state.kernel_dump);
         if (find_adrp_add_reference(adrp_va) == string_va) {
@@ -407,7 +406,7 @@ int main(int argc, char* argv[]) {
     // Step 5: Write payload to its physical destination.
     // This is the most difficult step without a physical write primitive.
     // We are PRETENDING we can do this via a special kernel call.
-    LOG("Writing payload to physical memory at 0x%llx...", PAYLOAD_PHYS_ADDR);
+    LOG("Writing payload to physical memory at 0x%llx...", (unsigned long long)PAYLOAD_PHYS_ADDR);
     // write_to_physical(PAYLOAD_PHYS_ADDR, payload_buf, payload_size);
     // For our tool, we'll write it to our own mapped virtual page to have it somewhere.
     // The *real* exploit would handle the phys mapping.

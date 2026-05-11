@@ -1,17 +1,30 @@
-ios-kexec-utils | kloader
+# ios-kexec-utils | kloader64 (A7-A10X Untethered Dualboot Revamp)
 
-kloader was made by winocm and improved by xerub, Jonathan Seals, and Yui.
+Created by winocm, subsequently improved by xerub, Jonathan Seals, and Yui. 
+**Heavily expanded, fortified, and revamped for modern 64-bit SoCs (A7-A10X) by Samuel Bowers.**
 
-Compilation requirements:
-    - Xcode, ldid, and basic compilation utilities
+## Compilation Requirements
+* Xcode Command Line Tools (Clang)
+* `ldid` (for injecting the custom tfp0/AMFI entitlements)
+* Standard UNIX compilation utilities (`make`)
 
-Usage requirements:
-    - armv7(s) device on iOS 3.1 through 10.3.3
-    - arm64 device on iOS 7.0 through 10.3.3+
-    - Jailbreak with either a task_for_pid(0) or host_get_special_port(4) patch
+## Usage Requirements
+* **Architecture:** Strictly optimized for `arm64` devices (A7, A8(X), A9(X), A10(X) Fusion).
+* **OS Versions:** iOS 7.0 through 17.7.10+ (Tested specifically against iOS 11-15).
+* **Jailbreak State:** Must possess a kernel execution primitive. Requires either a `task_for_pid(0)` or `host_get_special_port(4)` patch to manipulate the physical translation tables.
+* **Entitlements:** Binary MUST be signed with the included `entitlements.plist` to bypass Library Validation and acquire the kernel task port.
 
-Images supported: LLB, iBoot, iBSS, iBEC
+## Supported Images
+* LLB
+* iBoot
+* iBSS
+* iBEC
+* Custom raw `arm64` bootloaders
 
-Support for arm64 is not completely finished yet.
+## What's New in this Revamp
+Support for `arm64` has been completely finished and fortified. Previous iterations struggled with the A7-A10X transition due to KPP (Kernel Patch Protection) and new 64-bit Translation Table Entry (TTE) formats. This version:
+* Implements robust A7-A10X physical offset detection.
+* Bypasses 64-bit trampoline limitations by directly hooking the `larm_init_tramp` execution path via physical memory patching.
+* Stabilizes the `IOPMSleepSystem` transition sequence to ensure clean execution of the payload during the device's deepest sleep state.
 
-README updated: 21.07.2019
+README updated: 11.05.2026

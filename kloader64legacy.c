@@ -221,8 +221,8 @@ static uint32_t insn_bl_imm32(uint16_t *i)
 }
 
 static int insn_is_b_conditional(uint16_t *i)
-uint16_t cond = (*i & 0x0F00); return (*i & 0xF000) == 0xD000 && cond != 0x0F00 && cond != 0x0E00;
 {
+uint16_t cond = (*i & 0x0F00); return (*i & 0xF000) == 0xD000 && cond != 0x0F00 && cond != 0x0E00;
     return (*i & 0xF000) == 0xD000 && (*i & 0x0F00) != 0x0F00 && (*i & 0x0F00) != 0xE;
 }
 

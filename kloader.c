@@ -24,6 +24,7 @@
  * kloader64: iPhone 5S, iPad mini 2+3+4 - HomePod - iPhone6+Plus, iPod6 - iPadAir+2 = 7.0 - 10.3.3+
  */
 
+
 #include <stdio.h>
 #include <signal.h>
 #include <stdint.h>
@@ -42,6 +43,7 @@ extern mach_port_t IOPMFindPowerManagement(mach_port_t);
 /*
  * ARM page bits for L1 sections.
  */
+#define MACHO_HEADER_MAGIC_32 0xfeedface
 #define L1_SHIFT                    20 /* log2(1MB) */
 
 #define L1_SECT_PROTO               (1 << 1)   /* 0b10 */
@@ -233,7 +235,7 @@ static int insn_ldr_literal_rt(uint16_t *i)
 
 static int insn_ldr_literal_imm(uint16_t *i)
 {
-    if ((*i & 0xF800) == 0x4800)
+    if (((*i & 0xF800) == 0xF000) && ((*(i + 1) & 0xD000) == 0x9000))
         return (*i & 0xF) << 2;
     else if ((*i & 0xFF7F) == 0xF85F)
         return (*(i + 1) & 0xFFF) *(((*i & 0x0800) == 0x0800) ? 1 : -1);

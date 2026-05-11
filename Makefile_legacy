@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 # Updated for A7-A10X. 
-TARGET       = kloader64
+TARGET       = kloader64legacy
 ENTITLEMENTS = entitlements.plist
 SIGN         = ldid
 
